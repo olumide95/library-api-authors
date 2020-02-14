@@ -38,14 +38,10 @@ class AuthorsController extends Controller
      */
     public function show($author_uuid)
     {
-        $author = Author::where('uuid',$author_uuid)->first();
-
-        if($author){
-
-            return $this->successResponse($author,JsonResponse::HTTP_OK);
-        }
-
-        return $this->errorResponse('Author does not exist',404);
+        $author = Author::where('uuid',$author_uuid)->firstOrFail();
+        
+        return $this->successResponse($author,JsonResponse::HTTP_OK);
+        
     }
 
 
@@ -85,16 +81,13 @@ class AuthorsController extends Controller
             'country' => 'required|max:255'
         ]);
 
-       $author = Author::where('uuid',$author_uuid)->first();
+       $author = Author::where('uuid',$author_uuid)->firstOrFail();
 
-        if($author){
+        
+        $author->update($request->all());
 
-            $author->update($request->all());
-
-            return $this->successResponse('Author Updated Successfully',JsonResponse::HTTP_OK);
-        }
-
-        return $this->errorResponse('Author does not exist',404);
+        return $this->successResponse('Author Updated Successfully',JsonResponse::HTTP_OK);
+       
     }
 
     /**
@@ -103,15 +96,12 @@ class AuthorsController extends Controller
      */
     public function destroy($author_uuid)
     {
-        $author = Author::where('uuid',$author_uuid)->first();
+        $author = Author::where('uuid',$author_uuid)->firstOrFail();
 
-        if($author){
-            
-            $author->delete();
-            return $this->successResponse('Author deleted successfully',JsonResponse::HTTP_OK);
-        }
-
-        return $this->errorResponse('Author does not exist',404);
+         
+        $author->delete();
+        return $this->successResponse('Author deleted successfully',JsonResponse::HTTP_OK);
+        
     }
 
 
